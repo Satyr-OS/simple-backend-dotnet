@@ -10,7 +10,7 @@ namespace simple_backend_dotnet.models.DTO
 
         public float Price { get; set; }
 
-        public List<string?> Links { get; set; }
+        public List<string> Links { get; set; }
 
         public string Description { get; set; }
 

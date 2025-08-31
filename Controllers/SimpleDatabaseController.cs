@@ -12,43 +12,49 @@ public class SimpleDatabaseController : ControllerBase
     public async Task<IEnumerable<models.DTO.SimpleData>> Get()
     {
         var supabase = await Database.Initialize();
+
         var result = await supabase.From<models.Database.SimpleData>().Get();
 
         var items = result.Models.ToList().OrderBy(i => i.Id);
 
         var res = new List<models.DTO.SimpleData>();
+
         foreach (var item in items)
         {
-            List<Supabase.Storage.FileObject> files = [];
-            List<string?> urls = [];
-
-            if (item.Link is not null)
-            {
-                var tempfiles = await supabase.Storage.From(item.Link).List();
-                if (tempfiles is not null)
-                {
-                    files = tempfiles;
-                }
-
-                foreach (var file in files)
-                {
-                    var url = supabase.Storage.From(item.Link).GetPublicUrl(file.Name ?? "");
-                    urls.Add(url);
-                }
-            }
-
             res.Add(new models.DTO.SimpleData()
             {
                 Id = item.Id,
                 Created = item.Created,
                 Name = item.Name,
                 Price = item.Price,
-                Links = urls,
+                Links = await ImageUrls(item.Link, supabase),
                 Description = item.Description,
                 Currency = item.Currency
             });
         }
 
         return res;
+    }
+
+    private static async Task<List<string>> ImageUrls(string? link, Supabase.Client supabase)
+    {
+        List<string> urls = [];
+
+        if (link is null) return urls;
+
+        var files = await supabase.Storage.From(link).List() ?? [];
+
+        foreach (var file in files)
+        {
+            if (file.Name is null) continue;
+
+            string? url = supabase.Storage.From(link).GetPublicUrl(file.Name);
+
+            if (url is null) continue;
+
+            urls.Add(url);
+        }
+
+        return urls;
     }
 }
