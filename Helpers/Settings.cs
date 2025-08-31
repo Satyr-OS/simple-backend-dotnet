@@ -8,11 +8,11 @@ namespace simple_backend_dotnet.Helpers
         .AddEnvironmentVariables()
         .Build();
 
-        public static DatabaseConfig Database
+        public static Database.Config DatabaseConfig
         {
             get
             {
-                var conf = new DatabaseConfig();
+                var conf = new Database.Config();
                 AppSettings.GetSection("Database").Bind(conf);
 
                 return conf;
