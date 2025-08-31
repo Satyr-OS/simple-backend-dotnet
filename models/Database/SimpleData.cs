@@ -20,7 +20,7 @@ namespace simple_backend_dotnet.models.Database
         public float Price { get; set; }
 
         [Column("link")]
-        public string Link { get; set; }
+        public string? Link { get; set; }
 
         [Column("description")]
         public string Description { get; set; }
