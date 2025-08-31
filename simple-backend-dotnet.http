@@ -1,6 +1,6 @@
 @simple_backend_dotnet_HostAddress = http://localhost:5166
 
-GET {{simple_backend_dotnet_HostAddress}}/weatherforecast/
+GET {{simple_backend_dotnet_HostAddress}}/SimpleDatabase/
 Accept: application/json
 
 ###
